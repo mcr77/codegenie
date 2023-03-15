@@ -7,12 +7,12 @@ export default function middleware(req, context) {
 
     // parse login and password from headers
     const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
-    const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+    const [login, password] = atob(b64auth).split(':')
 
     // Verify login and password are set and correct
     if (login && password) {
         let loginIndex = authUsers.split(":").indexOf(login)
-        // console.log("compare",loginIndex, password, authPasses.split(":")[loginIndex])
+        console.log("compare",loginIndex, password, authPasses.split(":")[loginIndex])
         if (loginIndex >= 0 && password === authPasses.split(":")[loginIndex]){
             // Access granted...
             return next()
