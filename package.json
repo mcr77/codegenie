@@ -55,6 +55,6 @@
     "@testing-library/user-event": "^12.1.10",
     "@types/react": "^17.0.26",
     "react-obfuscate": "^3.6.7",
-    "react-scripts": "4.0.3"
+    "react-scripts": "5.0.1"
   }
 }
