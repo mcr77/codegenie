@@ -1,12 +1,12 @@
 import { next } from '@vercel/edge';
 
-export default function middleware(req, context) {
+export default function middleware(request, context) {
 
     const authUsers = process.env.AUTH_USERS ||"mihai:guest"
     const authPasses = process.env.AUTH_PASSES||"not4share:only4guests"
 
     // parse login and password from headers
-    const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+    const b64auth = (request.headers.authorization || '').split(' ')[1] || ''
     const [login, password] = atob(b64auth).split(':')
 
     // Verify login and password are set and correct
@@ -21,7 +21,8 @@ export default function middleware(req, context) {
 
     console.log("auth b64 data", b64auth)
     console.log("auth login&pass data", login, password)
-    console.log("request", JSON.stringify(req))
+    console.log("request", JSON.stringify(request))
+    console.log("context", JSON.stringify(context))
 
     // Access denied...
     const headers = new Headers();
