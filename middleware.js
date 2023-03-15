@@ -19,6 +19,8 @@ export default function middleware(req, context) {
         }
     }
 
+    console.log("auth data", b64auth, login, password)
+    
     // Access denied...
     const headers = new Headers();
     headers.set('WWW-Authenticate', 'Basic realm="401"');
