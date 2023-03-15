@@ -5,6 +5,7 @@ const { TextArea } = Input;
 const { Sider, Content } = Layout;
 const { Option } = Select;
 const separator = '\n';
+const host = ''
 
 const engines = [
     {
@@ -134,22 +135,34 @@ export default class StartPage extends Component {
             this.callOpenAiApi( contextTxt, inputTxt )
                 .then( response => response.json() )
                 .then( data => {
-                    let resObj = JSON.parse( JSON.stringify( data ) );
-                    if( resObj && resObj.choices && resObj.choices[0] ) {
-                        // console.log('json response:', resObj, data);
-                        // console.log('choice details:', resObj.choices[0]);
-                        let responseText = resObj.choices[0].text;
-                        if (responseText){
-                            this.setState( { response: responseText, loading: false } );
+                    try {
+                        let resObj = JSON.parse( JSON.stringify( data ) );
+                        if( resObj && resObj.choices && resObj.choices[0] ) {
+                            // console.log('json response:', resObj, data);
+                            // console.log('choice details:', resObj.choices[0]);
+                            let responseText = resObj.choices[0].text;
+                            if( responseText ) {
+                                this.setState( { response: responseText, loading: false } );
+                            } else {
+                                console.error( 'OpenAI Empty Response:', data, this.state.stopParameters );
+                                this.setState( {
+                                    response: 'Error -> empty response. Reason: ' + resObj.choices[0].finish_reason,
+                                    loading: false
+                                } );
+                            }
                         } else {
-                            console.error( 'OpenAI Empty Response:', data, this.state.stopParameters );
-                            this.setState( { response: 'Error -> empty response. Reason: ' + resObj.choices[0].finish_reason, loading: false } );
+                            console.error( 'OpenAI Error:', data );
+                            this.setState( { response: '!Error!', loading: false } );
                         }
-                    } else {
+                    }catch( e ) {
                         console.error( 'OpenAI Error:', data );
                         this.setState( { response: '!Error!', loading: false } );
                     }
-                } );
+                } )
+                .catch(e => {
+                    console.error( 'OpenAI Error:', e );
+                    this.setState( { response: '!Error!', loading: false } );
+                });
         }
     };
 
@@ -202,35 +215,8 @@ export default class StartPage extends Component {
             body: JSON.stringify( requestBody )
         };
 
-        return fetch( "/query?engineCode="+this.state.modelCode, requestOptions );
+        return fetch( host + "/api/query?engineCode="+this.state.modelCode, requestOptions );
     };
-
-    // callOpenAiApi = ( contextTxt: string, inputTxt: string ) => {
-    //
-    //     const requestBody = {
-    //         'prompt': `${contextTxt}${separator}${inputTxt}`,
-    //         'temperature': this.state.queryConfig.temperature,
-    //         'max_tokens': this.state.queryConfig.maxToken,
-    //         'top_p': 1.0,
-    //         'frequency_penalty': 0.7,
-    //         'presence_penalty': 0.6,
-    //         'stop': this.state.activeStopParameters? this.state.stopParameters : null
-    //
-    //     };
-    //
-    //     const requestOptions = {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer xxx' },
-    //         body: JSON.stringify( requestBody )
-    //     };
-    //
-    //     let engine = engines.find(e => e.code === this.state.modelCode)
-    //     // console.log('engine', this.state.modelCode, engine,  engines)
-    //     // console.log('engine', this.state.modelCode, engine.url, requestOptions)
-    //
-    //     // return fetch( 'https://api.openai.com/v1/engines/davinci-codex/completions', requestOptions );
-    //     return fetch( engine.url, requestOptions );
-    // };
 
     render() {
 
