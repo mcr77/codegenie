@@ -1,9 +1,16 @@
-require('./auth')
-const express = require('express')
+
+
+
+const app = require('express')()
 const bodyParser = require('body-parser')
+
+const https = require('https');
+const http = require('http');
+
 const cors = require('cors')
 const sendOpenAi = require('./sendOpenAI')
 const path = require('path')
+
 
 const ALLOW_ORIGIN = process.env.ALLOW_ORIGIN || "http://localhost:8081"
 
@@ -21,7 +28,6 @@ const corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
-let app = express()
 app.set('port', (process.env.PORT || 8081));
 app.disable('x-powered-by')
 
@@ -31,13 +37,7 @@ app.use(cors(corsOptions))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app
-  .get('/api/test', function(req, res) {
-    console.log("test rest call")
-    console.log("debug  var:" + req.query.name)
-      res.send("test")
-  })
-    .post('/api/query', function(req, res) {
+app.post('/api/query', function(req, res) {
         let engineCode = req.query.engineCode
         console.log(req.body)
         console.log("debug  var:" + engineCode)
@@ -52,6 +52,7 @@ app
     .get('/test', function(req, res) {
         console.log("test rest call")
         console.log("debug  var:" + req.query.name)
+        res.send("test")
     })
 
     .get('/', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')))
