@@ -21,7 +21,7 @@ export default function middleware(req, context) {
 
     // Access denied...
     const  res = new Response()
-    res.set('WWW-Authenticate', 'Basic realm="401"') // change this
+    res.headers().append('WWW-Authenticate', 'Basic realm="401"') // change this
     res.status(401).send('Authentication required.') // custom message
     return res
 }
