@@ -3,6 +3,7 @@ import { ipAddress, next } from '@vercel/edge';
 export default function middleware(request, context) {
     const ip = ipAddress(request);
 
+    console.log("ip", ip)
     console.log("request", JSON.stringify(request))
     console.log("context", JSON.stringify(context))
 

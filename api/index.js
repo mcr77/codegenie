@@ -49,13 +49,13 @@ app.post('/api/query', function(req, res) {
 
     .use(express.static(path.join(__dirname, '../dist'), { maxAge: '1d' }))
 
-    .get('/test', function(req, res) {
+    .get('api/test', function(req, res) {
         console.log("test rest call")
         console.log("debug  var:" + req.query.name)
         res.send("test")
     })
 
-    .get('/', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')))
+    //.get('/', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')))
 
 // finally, let's start our server...
 
