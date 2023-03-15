@@ -21,7 +21,7 @@ export default function middleware(req, context) {
 
     console.log("auth b64 data", b64auth)
     console.log("auth login&pass data", login, password)
-    console.log("request", req)
+    console.log("request", JSON.stringify(req))
 
     // Access denied...
     const headers = new Headers();
