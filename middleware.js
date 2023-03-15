@@ -22,7 +22,5 @@ export default function middleware(req, context) {
     // Access denied...
     const headers = new Headers();
     headers.set('WWW-Authenticate', 'Basic realm="401"');
-    const res =  new Response('Authentication required.', {headers});
-    res.status(401)
-    return res
+    return new Response('Authentication required.', {headers: headers, status: 401})
 }
